@@ -1,0 +1,41 @@
+import { KeyPressContext } from "@/lib/context/key-press/KeyPressContext";
+import { useContext, useEffect, useState, type ReactElement } from "react";
+import { HighlightDot } from "./HighlightDot";
+import { Pos } from "./types";
+
+export interface KeyboardHighlightProps {
+  keyboardRef: { current: HTMLDivElement };
+}
+
+export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
+  const { nextKey } = useContext(KeyPressContext);
+  const [toPos, setToPos] = useState<Pos | undefined>({ x: 0, y: 0 });
+  const [fromPos, setFromPos] = useState<Pos | undefined>({ x: 0, y: 0 });
+
+  function getPos(el: Element | null): Pos | undefined {
+    if (!el) return undefined;
+    const key = el.getBoundingClientRect();
+    return {
+      y: key.top + window.scrollY,
+      x: key.left + window.scrollX,
+    };
+  }
+
+  useEffect(() => {
+    const toKey = keyboardRef.current.querySelector(
+      `[data-key-code=${nextKey}], [data-secondary-key-code=${nextKey}]`,
+    );
+    const fromKeyCode = toKey?.getAttribute("data-from-key");
+
+    const fromKey = keyboardRef.current.querySelector(
+      `[data-key-code=${fromKeyCode}], [data-secondary-key-code=${fromKeyCode}]`,
+    );
+
+    setToPos(getPos(toKey));
+    setFromPos(getPos(fromKey));
+  }, [nextKey, keyboardRef]);
+
+  if (!toPos && !fromPos) return null;
+
+  return <HighlightDot toPos={toPos} fromPos={fromPos} />;
+}

@@ -83,12 +83,21 @@ export function Words({ selectedLanguage }: WordsProps): ReactElement {
 
   return (
     <div className="w-full text-xl relative" style={{ left: xOffset }}>
-      <span className="text-gray-500">{completedLetters}</span>
-      <Character character={currentLetter} active />
-      {wrongLetters.map((c, index) => (
-        <Character character={c} error key={`wrong-${index}-${c}`} />
-      ))}
-      <span>{uncompletedLetters}</span>
+      <div className="grid grid-cols-2">
+        <div className="whitespace-pre text-right flex justify-end overflow-hidden text-gray-300 w-full">
+          <span className="text-gray-300">{completedLetters}</span>
+        </div>
+        <div className="flex whitespace-pre">
+          <Character character={currentLetter} active />
+
+          <div className="whitespace-pre text-left w-full">
+            {wrongLetters.map((c, index) => (
+              <Character character={c} error key={`wrong-${index}-${c}`} />
+            ))}
+            <span>{uncompletedLetters}</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

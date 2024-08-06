@@ -1,5 +1,5 @@
 import { KeyType } from "@/lib/types/key";
-import { VariantProps, cva } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 
 const keyStyles = cva(
   "h-64 flex font-mono p-8 rounded-lg transition-transform",

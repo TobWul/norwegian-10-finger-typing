@@ -9,79 +9,86 @@ import {
 import { wordLists } from "@/lib/word-lists";
 import { Character } from "./Character";
 import { shuffle } from "@/lib/utils/shuffle";
-import { CurrentWord } from "./CurrentWord.1";
+import { CurrentWord } from "./CurrentWord";
 import { TypingSpeedCalculationContext } from "@/lib/context/typing-speed-calculation/TypingSpeedCalculationContext";
+import { getPressedKey } from "@/lib/context/key-press/utils/getPressedKey";
+import { KeyPressContext } from "@/lib/context/key-press/KeyPressContext";
 
 export interface WordsProps {
   selectedLanguage: keyof typeof wordLists;
 }
 
+// Human limit
+const MAXIMUM_WORDS_PER_MINUTE = 250;
+
 export function Words({ selectedLanguage }: WordsProps): ReactElement {
-  const { addSuccess } = useContext(TypingSpeedCalculationContext);
-  const words = useMemo(() => {
-    const maxWPM = 200;
-    return shuffle(wordLists[selectedLanguage].slice(0, maxWPM)).join(" ");
-  }, [selectedLanguage]);
+  const [completedLetters, setCompletedLetters] = useState<string[]>([]);
+  const [uncompletedLetters, setUncompletedLetters] = useState<string[]>([]);
+  const [wrongLetters, setWrongLetters] = useState<string[]>([]);
+  const [currentLetter, setCurrentLetter] = useState<string>("");
+  const [xOffset, setXOffset] = useState(0);
+  const { addSuccess, addError } = useContext(TypingSpeedCalculationContext);
 
-  const completeWord = (word: string) => {
-    setCompletedWords((prev) => `${prev} ${word}`);
-    const _uncompletedWords = uncompletedWords.split(" ");
-    const newWord = _uncompletedWords.shift();
-    if (!newWord) {
-      alert("Out of words");
-      return;
-    }
-    setUncompletedWords(_uncompletedWords.join(" "));
-    setCurrentWord(newWord);
-    addSuccess(word.length);
-  };
-
-  const getInitialCenterPosition = () => {};
+  const { lastPressedKey, setNextKey } = useContext(KeyPressContext);
 
   useEffect(() => {
-    completeWord("");
+    const letters = shuffle(
+      wordLists[selectedLanguage].slice(0, MAXIMUM_WORDS_PER_MINUTE),
+    )
+      .join(" ")
+      .split("");
+    const _currentLetter = letters.shift() as string;
+    setUncompletedLetters(letters);
+    setCurrentLetter(_currentLetter);
+    setNextKey(_currentLetter);
+  }, [selectedLanguage]);
+
+  const backspace = () => {
+    setWrongLetters((prev) => prev.slice(0, -1));
+  };
+
+  const typedCorrectKey = () => {
+    setCompletedLetters((prev) => [...prev, currentLetter]);
+    const nextLetter = uncompletedLetters[0];
+    setUncompletedLetters((prev) => prev.slice(1));
+    setCurrentLetter(nextLetter);
+    setNextKey(nextLetter);
+  };
+
+  useEffect(() => {
+    if (wrongLetters.length > 0) setNextKey("backspace");
+    else setNextKey(currentLetter);
+  }, [wrongLetters, currentLetter, setNextKey]);
+
+  const typedWrongKey = (letter: string) => {
+    const character = letter === " " ? "␣" : letter;
+    setWrongLetters((prev) => [...prev, character]);
+  };
+
+  useEffect(() => {
+    const key = getPressedKey(lastPressedKey);
+
+    if (!key) return;
+    if (key === "backspace") backspace();
+    if (key.length >= 2) return;
+
+    if (key === currentLetter && wrongLetters.length === 0) {
+      typedCorrectKey();
+    } else {
+      typedWrongKey(key);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [completedWords, setCompletedWords] = useState<string>("");
-  const [uncompletedWords, setUncompletedWords] = useState<string>(words);
-  const [currentWord, setCurrentWord] = useState<string>("heia");
-
-  const [xOffset, setXOffset] = useState(0);
+  }, [lastPressedKey]);
 
   return (
     <div className="w-full text-xl relative" style={{ left: xOffset }}>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="whitespace-nowrap text-right flex justify-end overflow-hidden text-gray-300 w-full">
-          <div>
-            {completedWords
-              .split("")
-              .map((character: string, index: number) => (
-                <Character
-                  character={character}
-                  key={`completed-character-${character}-${index}`}
-                />
-              ))}
-          </div>
-        </div>
-        <div className="flex">
-          <CurrentWord
-            currentWord={currentWord}
-            completeWord={completeWord}
-            setXOffset={setXOffset}
-          />
-          <div className="whitespace-nowrap text-left w-full">
-            {uncompletedWords
-              .split("")
-              .map((character: string, index: number) => (
-                <Character
-                  character={character}
-                  key={`uncomplete-character-${character}-${index}`}
-                />
-              ))}
-          </div>
-        </div>
-      </div>
+      <span className="text-gray-500">{completedLetters}</span>
+      <Character character={currentLetter} active />
+      {wrongLetters.map((c, index) => (
+        <Character character={c} error key={`wrong-${index}-${c}`} />
+      ))}
+      <span>{uncompletedLetters}</span>
     </div>
   );
 }

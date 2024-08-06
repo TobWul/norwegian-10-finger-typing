@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { Key } from "./Key";
 import { keys } from "./keys";
 import { KeyPressContext } from "@/lib/context/key-press/KeyPressContext";

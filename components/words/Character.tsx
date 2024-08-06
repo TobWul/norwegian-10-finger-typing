@@ -1,4 +1,4 @@
-import { cva, cx } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { type ReactElement } from "react";
 
 export interface CharacterProps {
@@ -18,8 +18,8 @@ const characterStyles = cva("", {
       true: "line-through text-accent animate-wiggle bg-accent-light",
       false: "",
     },
-    complete: {
-      true: "text-blue-600",
+    animate: {
+      true: "inline-block",
       false: "",
     },
   },
@@ -28,13 +28,16 @@ const characterStyles = cva("", {
 export function Character({
   character,
   active,
-  complete,
   error,
 }: CharacterProps): ReactElement {
   return (
     <span
       id={active ? "active" : undefined}
-      className={characterStyles({ active: active && !error, error, complete })}
+      className={characterStyles({
+        active: active && !error,
+        error,
+        animate: character !== " ",
+      })}
     >
       {character}
     </span>

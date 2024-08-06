@@ -22,8 +22,12 @@ export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
   }
 
   useEffect(() => {
+    if (!nextKey) return;
+    let toKeyCode = nextKey;
+    if (nextKey === " ") toKeyCode = "space";
+
     const toKey = keyboardRef.current.querySelector(
-      `[data-key-code=${nextKey}], [data-secondary-key-code=${nextKey}]`,
+      `[data-key-code=${toKeyCode}], [data-secondary-key-code=${toKeyCode}]`,
     );
     const fromKeyCode = toKey?.getAttribute("data-from-key");
 

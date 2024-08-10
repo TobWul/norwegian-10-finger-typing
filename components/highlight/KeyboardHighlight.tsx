@@ -4,16 +4,16 @@ import { HighlightDot } from "./HighlightDot";
 import { Pos } from "./types";
 
 export interface KeyboardHighlightProps {
-  keyboardRef: { current: HTMLDivElement };
+  keyboardRef: React.RefObject<HTMLDivElement>;
 }
 
 export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
   const { nextKey } = useContext(KeyPressContext);
-  const [toPos, setToPos] = useState<Pos | undefined>({ x: 0, y: 0 });
-  const [fromPos, setFromPos] = useState<Pos | undefined>({ x: 0, y: 0 });
+  const [toPos, setToPos] = useState<Pos>({ x: 0, y: 0 });
+  const [fromPos, setFromPos] = useState<Pos>({ x: 0, y: 0 });
 
-  function getPos(el: Element | null): Pos | undefined {
-    if (!el) return undefined;
+  function getPos(el: Element | null | undefined): Pos {
+    if (!el) return { y: 0, x: 0 };
     const key = el.getBoundingClientRect();
     return {
       y: key.top + window.scrollY,
@@ -26,12 +26,12 @@ export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
     let toKeyCode = nextKey;
     if (nextKey === " ") toKeyCode = "space";
 
-    const toKey = keyboardRef.current.querySelector(
+    const toKey = keyboardRef.current?.querySelector(
       `[data-key-code=${toKeyCode}], [data-secondary-key-code=${toKeyCode}]`,
     );
     const fromKeyCode = toKey?.getAttribute("data-from-key");
 
-    const fromKey = keyboardRef.current.querySelector(
+    const fromKey = keyboardRef.current?.querySelector(
       `[data-key-code=${fromKeyCode}], [data-secondary-key-code=${fromKeyCode}]`,
     );
 

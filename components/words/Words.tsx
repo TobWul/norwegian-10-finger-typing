@@ -1,15 +1,8 @@
 "use client";
-import {
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactElement,
-} from "react";
+import { useContext, useEffect, useState, type ReactElement } from "react";
 import { wordLists } from "@/lib/word-lists";
 import { Character } from "./Character";
 import { shuffle } from "@/lib/utils/shuffle";
-import { CurrentWord } from "./CurrentWord";
 import { TypingSpeedCalculationContext } from "@/lib/context/typing-speed-calculation/TypingSpeedCalculationContext";
 import { getPressedKey } from "@/lib/context/key-press/utils/getPressedKey";
 import { KeyPressContext } from "@/lib/context/key-press/KeyPressContext";
@@ -26,8 +19,6 @@ export function Words({ selectedLanguage }: WordsProps): ReactElement {
   const [uncompletedLetters, setUncompletedLetters] = useState<string[]>([]);
   const [wrongLetters, setWrongLetters] = useState<string[]>([]);
   const [currentLetter, setCurrentLetter] = useState<string>("");
-  const [xOffset, setXOffset] = useState(0);
-  const { addSuccess, addError } = useContext(TypingSpeedCalculationContext);
 
   const { lastPressedKey, setNextKey } = useContext(KeyPressContext);
 
@@ -41,7 +32,7 @@ export function Words({ selectedLanguage }: WordsProps): ReactElement {
     setUncompletedLetters(letters);
     setCurrentLetter(_currentLetter);
     setNextKey(_currentLetter);
-  }, [selectedLanguage]);
+  }, [selectedLanguage, setNextKey]);
 
   const backspace = () => {
     setWrongLetters((prev) => prev.slice(0, -1));
@@ -82,7 +73,8 @@ export function Words({ selectedLanguage }: WordsProps): ReactElement {
   }, [lastPressedKey]);
 
   return (
-    <div className="w-full text-xl relative" style={{ left: xOffset }}>
+    <div className="w-full text-xl relative">
+      {" "}
       <div className="grid grid-cols-2">
         <div className="whitespace-pre text-right flex justify-end overflow-hidden text-gray-300 w-full">
           <span className="text-gray-300">{completedLetters}</span>

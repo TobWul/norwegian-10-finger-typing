@@ -9,7 +9,7 @@ type KeyboardProps = {};
 
 export const Keyboard = ({}: KeyboardProps) => {
   const { pressedKeys } = useContext(KeyPressContext);
-  const keyboardRef = useRef(null);
+  const keyboardRef = useRef<HTMLDivElement | null>(null);
   return (
     <>
       <KeyboardHighlight keyboardRef={keyboardRef} />

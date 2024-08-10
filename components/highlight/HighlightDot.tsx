@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { Pos } from "./types";
 
 export interface HighlightDotProps {
-  toPos?: Pos;
-  fromPos?: Pos;
+  toPos: Pos;
+  fromPos: Pos;
 }
 
 export function HighlightDot({ toPos, fromPos }: HighlightDotProps) {

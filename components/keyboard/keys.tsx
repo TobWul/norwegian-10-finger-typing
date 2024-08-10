@@ -1,5 +1,6 @@
 import { KeyType } from "@/lib/types/key";
 
+// @ts-ignore
 export const keys: KeyType[][] = [
   [
     {
@@ -277,17 +278,15 @@ export const keys: KeyType[][] = [
           4: "l",
           3: "k",
           2: "j",
-        }[key.fingerGroup];
+        }[key.fingerGroup ?? 0];
       } else {
         return {
           5: "a",
           4: "s",
           3: "d",
           2: "f",
-        }[key.fingerGroup];
+        }[key.fingerGroup ?? 0];
       }
     })(),
   })),
 );
-
-console.log(keys);

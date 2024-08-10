@@ -52,6 +52,7 @@ export function CurrentWord({
 
   const addXOffsetOfCurrentCharacter = (offsetModifier: 0 | 1 | -1 = 1) => {
     const currentCharacterElement =
+      // @ts-ignore
       currentWordElement.current.querySelector("#active");
 
     const characterWidthInPx = currentCharacterElement.offsetWidth;

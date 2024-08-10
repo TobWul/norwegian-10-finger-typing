@@ -4,7 +4,7 @@ import { HighlightDot } from "./HighlightDot";
 import { Pos } from "./types";
 
 export interface KeyboardHighlightProps {
-  keyboardRef: { current: HTMLDivElement };
+  keyboardRef: React.RefObject<HTMLDivElement>;
 }
 
 export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
@@ -12,7 +12,7 @@ export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
   const [toPos, setToPos] = useState<Pos | undefined>({ x: 0, y: 0 });
   const [fromPos, setFromPos] = useState<Pos | undefined>({ x: 0, y: 0 });
 
-  function getPos(el: Element | null): Pos | undefined {
+  function getPos(el: Element | null | undefined): Pos | undefined {
     if (!el) return undefined;
     const key = el.getBoundingClientRect();
     return {
@@ -26,12 +26,12 @@ export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
     let toKeyCode = nextKey;
     if (nextKey === " ") toKeyCode = "space";
 
-    const toKey = keyboardRef.current.querySelector(
+    const toKey = keyboardRef.current?.querySelector(
       `[data-key-code=${toKeyCode}], [data-secondary-key-code=${toKeyCode}]`,
     );
     const fromKeyCode = toKey?.getAttribute("data-from-key");
 
-    const fromKey = keyboardRef.current.querySelector(
+    const fromKey = keyboardRef.current?.querySelector(
       `[data-key-code=${fromKeyCode}], [data-secondary-key-code=${fromKeyCode}]`,
     );
 

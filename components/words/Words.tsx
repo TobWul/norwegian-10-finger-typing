@@ -3,7 +3,6 @@ import { useContext, useEffect, useState, type ReactElement } from "react";
 import { wordLists } from "@/lib/word-lists";
 import { Character } from "./Character";
 import { shuffle } from "@/lib/utils/shuffle";
-import { TypingSpeedCalculationContext } from "@/lib/context/typing-speed-calculation/TypingSpeedCalculationContext";
 import { getPressedKey } from "@/lib/context/key-press/utils/getPressedKey";
 import { KeyPressContext } from "@/lib/context/key-press/KeyPressContext";
 

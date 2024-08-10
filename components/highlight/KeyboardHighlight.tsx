@@ -13,7 +13,7 @@ export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
   const [fromPos, setFromPos] = useState<Pos>({ x: 0, y: 0 });
 
   function getPos(el: Element | null | undefined): Pos {
-    if (!el) return { y: 0, x: 0 };
+    if (!el) return { y: -1, x: -1 };
     const key = el.getBoundingClientRect();
     return {
       y: key.top + window.scrollY,

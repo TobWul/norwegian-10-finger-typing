@@ -8,7 +8,7 @@ export interface HighlightDotProps {
 
 export function HighlightDot({ toPos, fromPos }: HighlightDotProps) {
   const [lineLength, angle] = useMemo(() => {
-    if (!fromPos || !toPos) return [null, null];
+    if (fromPos.x < 0 || toPos.x < 0) return [null, null];
     const y = toPos.y - fromPos.y;
     const x = toPos.x - fromPos.x;
 

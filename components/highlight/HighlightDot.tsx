@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import { Pos } from "./types";
 
 export interface HighlightDotProps {
-  toPos: Pos;
-  fromPos: Pos;
+  toPos: Pos | undefined;
+  fromPos: Pos | undefined;
 }
 
 export function HighlightDot({ toPos, fromPos }: HighlightDotProps) {
   const [lineLength, angle] = useMemo(() => {
-    if (fromPos.x < 0 || toPos.x < 0) return [null, null];
+    if (!fromPos || !toPos) return [null, null];
     const y = toPos.y - fromPos.y;
     const x = toPos.x - fromPos.x;
 
@@ -34,17 +34,19 @@ export function HighlightDot({ toPos, fromPos }: HighlightDotProps) {
 
   return (
     <>
-      <div
-        id="dot"
-        style={{
-          top: toPos.y + keyOffset.y,
-          left: toPos.x + keyOffset.x,
-        }}
-        className="absolute z-10 w-16 h-16 flex align-center justify-center border border-accent rounded-full"
-      >
-        <div className="bg-accent w-[10px] h-[10px] rounded-full relative top-[2px]"></div>
-      </div>
-      {!!lineLength && !!angle && (
+      {toPos && (
+        <div
+          id="dot"
+          style={{
+            top: toPos.y + keyOffset.y,
+            left: toPos.x + keyOffset.x,
+          }}
+          className="absolute z-10 w-16 h-16 flex align-center justify-center border border-accent rounded-full"
+        >
+          <div className="bg-accent w-[10px] h-[10px] rounded-full relative top-[2px]"></div>
+        </div>
+      )}
+      {!!lineLength && !!angle && toPos && (
         <div
           id="line"
           style={{

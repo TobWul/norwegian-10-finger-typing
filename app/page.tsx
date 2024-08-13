@@ -10,7 +10,6 @@ export default function Home() {
     <KeyPressContextProvider>
       <TypingSpeedCalculationContextProvider>
         <div className="flex flex-col gap-24 items-center justify-center h-screen overflow-x-hidden">
-          <div className="fixed left-1/2 h-screen w-1 bg-gray-900 z-10" />
           <Stats />
           <div className="w-full flex justify-left p-24">
             <Words selectedLanguage="norwegian" />

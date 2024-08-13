@@ -8,7 +8,7 @@ export interface CharacterProps {
   complete?: boolean;
 }
 
-const characterStyles = cva("", {
+const characterStyles = cva("relative", {
   variants: {
     active: {
       true: "bg-gray-200",

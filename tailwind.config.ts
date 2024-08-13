@@ -17,7 +17,7 @@ const config: Config = {
   theme: {
     spacing: {
       0: "0px",
-      1: "1x",
+      1: "1px",
       2: "0.125rem",
       4: "0.25rem",
       8: "0.5rem",
@@ -58,11 +58,17 @@ const config: Config = {
       },
       animation: {
         wiggle: "wiggle 200ms ease-in-out",
+        caret: "caret 1200ms infinite step-start",
       },
       keyframes: {
         wiggle: {
           "0%, 100%": { transform: "rotate(-4deg) translateY(0px)" },
           "50%": { transform: "rotate(8deg) translateY(-5px)" },
+        },
+        caret: {
+          "0%": { opacity: "0" },
+          "50%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
       },
     },

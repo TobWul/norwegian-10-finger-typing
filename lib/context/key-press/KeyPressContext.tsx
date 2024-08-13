@@ -40,6 +40,7 @@ function KeyPressContextProvider({
         if (!prev.includes(pressedKey)) return [...prev, pressedKey];
         return prev;
       });
+
       setLastPressedKey(e);
     };
 

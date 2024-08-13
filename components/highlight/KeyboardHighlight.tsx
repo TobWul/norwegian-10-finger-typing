@@ -7,6 +7,10 @@ export interface KeyboardHighlightProps {
   keyboardRef: React.RefObject<HTMLDivElement>;
 }
 
+function escapeCssSelector(value?: string) {
+  return value?.replace(/([!"#$%&'()*+,\-.\/:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
+}
+
 export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
   const { nextKey } = useContext(KeyPressContext);
   const [toPos, setToPos] = useState<Pos | undefined>({ x: 0, y: 0 });
@@ -27,12 +31,12 @@ export function KeyboardHighlight({ keyboardRef }: KeyboardHighlightProps) {
     if (nextKey === " ") toKeyCode = "space";
 
     const toKey = keyboardRef.current?.querySelector(
-      `[data-key-code=${toKeyCode}], [data-secondary-key-code=${toKeyCode}]`,
+      `[data-key-code=${escapeCssSelector(toKeyCode)}], [data-secondary-key-code=${escapeCssSelector(toKeyCode)}]`,
     );
     const fromKeyCode = toKey?.getAttribute("data-from-key");
 
     const fromKey = keyboardRef.current?.querySelector(
-      `[data-key-code=${fromKeyCode}], [data-secondary-key-code=${fromKeyCode}]`,
+      `[data-key-code=${escapeCssSelector(fromKeyCode)}], [data-secondary-key-code=${escapeCssSelector(fromKeyCode)}]`,
     );
 
     setToPos(getPos(toKey));
